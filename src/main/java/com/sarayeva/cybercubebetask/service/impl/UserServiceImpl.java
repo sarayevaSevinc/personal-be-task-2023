@@ -20,12 +20,7 @@ public class UserServiceImpl implements UserService {
         log.info("adding the person with name={}", userDto.getName());
         User user = UserMapper.INSTANCE.mapToUser(userDto);
         log.info("mapped user = {}", user);
-
-        User u = new User();
-        u.setName(userDto.getName());
-        u.setSurname(userDto.getSurname());
-        u.setBudget(userDto.getBudget());
-        User saved = userRepository.save(u);
+        User saved = userRepository.save(user);
         log.info("saved user = {}", user);
         return UserMapper.INSTANCE.mapToDto(saved);
     }
@@ -38,5 +33,15 @@ public class UserServiceImpl implements UserService {
         UserDto userDto = UserMapper.INSTANCE.mapToDto(user);
         log.info("personDto = {}", userDto);
         return userDto;
+    }
+
+    @Override
+    public UserDto updateUser(UserDto userDto, Long userId) {
+        log.info("adding the person with name={}", userDto.getName());
+        User user = UserMapper.INSTANCE.mapToUser(userDto);
+        log.info("mapped user = {}", user);
+        User saved = userRepository.save(user);
+        log.info("saved user = {}", user);
+        return UserMapper.INSTANCE.mapToDto(saved);
     }
 }

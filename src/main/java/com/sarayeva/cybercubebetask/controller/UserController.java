@@ -26,8 +26,8 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userRequest) {
-        UserDto user = userService.addUser(userRequest);
+    public ResponseEntity<UserDto> updateUser(@RequestHeader("id") Long id, @RequestBody UserDto userRequest) {
+        UserDto user = userService.updateUser(userRequest, id);
         return ResponseEntity.ok(user);
     }
 }
