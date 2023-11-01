@@ -1,5 +1,6 @@
 package com.sarayeva.cybercubebetask.domain;
 
+import com.sarayeva.cybercubebetask.enums.AnalysisType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,10 +18,9 @@ import java.util.List;
 public class Analysis implements Serializable {
     private static final long serialVersionUID = 7156526077883281623L;
     @Id
-    @SequenceGenerator(name = "analysis_seq", sequenceName = "analysis_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "analysis_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String type;
+    private AnalysisType type;
     @OneToOne
     private User owner;
     @OneToMany

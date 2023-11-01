@@ -17,8 +17,9 @@ public class AnalysisController {
 
 
     @PostMapping
-    public ResponseEntity<UserDto> createAnalysis(@RequestBody AnalysisDto analysisRequest) {
-        UserDto user = analysisService.addUser(userRequest);
-        return ResponseEntity.ok(user);
+    public ResponseEntity<AnalysisDto> createAnalysis(@RequestHeader("id") Long id,
+                                                      @RequestBody AnalysisDto analysisRequest) {
+        AnalysisDto analysisDto = analysisService.saveAnalysis(analysisRequest, id);
+        return ResponseEntity.ok(analysisDto);
     }
 }
