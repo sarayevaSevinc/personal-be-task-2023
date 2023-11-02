@@ -2,6 +2,7 @@ package com.sarayeva.cybercubebetask.service.impl;
 
 import com.sarayeva.cybercubebetask.domain.User;
 import com.sarayeva.cybercubebetask.dto.UserDto;
+import com.sarayeva.cybercubebetask.exception.UserNotFoundException;
 import com.sarayeva.cybercubebetask.mapper.UserMapper;
 import com.sarayeva.cybercubebetask.repository.UserRepository;
 import com.sarayeva.cybercubebetask.service.UserService;
@@ -27,21 +28,35 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto getUser(Long id) {
-        log.info("getting the person with id={}", id);
-        User user = userRepository.findUserById(id);
-        log.info("got the person ={}", user);
+        User user = getUserInternal(id);
         UserDto userDto = UserMapper.INSTANCE.mapToDto(user);
-        log.info("personDto = {}", userDto);
+        log.info("retrieved user with userId = {}", id);
         return userDto;
     }
 
     @Override
+    public User getUserInternal(Long id) {
+        log.info("Getting user with userId={}", id);
+        User user = userRepository.findUserById(id);
+        if (user == null) {
+            throw new UserNotFoundException();
+        }
+        log.info("user found with userId={}", id);
+        return user;
+    }
+
+    @Override
     public UserDto updateUser(UserDto userDto, Long userId) {
-        log.info("adding the person with name={}", userDto.getName());
-        User user = UserMapper.INSTANCE.mapToUser(userDto);
-        log.info("mapped user = {}", user);
+        User user = getUserInternal(userId);
+        user = UserMapper.INSTANCE.mapToUser(user, userDto);
+        log.info("updating user with userId={}", userId);
         User saved = userRepository.save(user);
-        log.info("saved user = {}", user);
+        log.info("updated user with userId={}", userId);
         return UserMapper.INSTANCE.mapToDto(saved);
+    }
+
+    @Override
+    public User updateUser(User user) {
+        return userRepository.save(user);
     }
 }

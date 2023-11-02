@@ -14,7 +14,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<UserDto> retrieveUser(@RequestHeader("id") Long id) {
+    public ResponseEntity<UserDto> retrieveUser(@RequestHeader("user-id") Long id) {
         UserDto user = userService.getUser(id);
         return ResponseEntity.ok(user);
     }
@@ -26,7 +26,7 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<UserDto> updateUser(@RequestHeader("id") Long id, @RequestBody UserDto userRequest) {
+    public ResponseEntity<UserDto> updateUser(@RequestHeader("user-id") Long id, @RequestBody UserDto userRequest) {
         UserDto user = userService.updateUser(userRequest, id);
         return ResponseEntity.ok(user);
     }

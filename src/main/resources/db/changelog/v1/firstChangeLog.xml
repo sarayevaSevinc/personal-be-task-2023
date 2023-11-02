@@ -14,6 +14,12 @@
             <column name="budget" type="DECIMAL">
                 <constraints nullable="true" />
             </column>
+            <column name="created_time" type="TimeStamp">
+                <constraints nullable="false" />
+            </column>
+            <column name="updated_time" type="TimeStamp">
+                <constraints nullable="false" />
+            </column>
         </createTable>
         <createSequence sequenceName="analysis_seq" incrementBy="1" startValue="1"/>
         <createTable tableName="analysis">
@@ -23,14 +29,32 @@
             <column name="type" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="owner" type="BIGINT">
+            <column name="owner_id" type="BIGINT">
                 <constraints nullable="true" />
             </column>
-            <column name="viewers" type="BIGINT[]">
+            <column name="hidden_info" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="hiddenInfo" type="varchar(255)">
-                <constraints nullable="true" />
+            <column name="created_time" type="TimeStamp">
+                <constraints nullable="false" />
+            </column>
+            <column name="updated_time" type="TimeStamp">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+
+        <createTable tableName="analysis_viewers">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" />
+            </column>
+            <column name="analysis_id" type="bigint">
+                <constraints nullable="false" referencedTableName="analysis" referencedColumnNames="id"
+                             foreignKeyName="analysis_id_fk1"/>
+            </column>
+            <column name="viewers_id" type="bigint">
+                <constraints nullable="false" referencedTableName="users" referencedColumnNames="id"
+                             foreignKeyName="viewers_id_fk2"/>
             </column>
         </createTable>
     </changeSet>
