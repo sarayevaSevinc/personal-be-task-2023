@@ -1,0 +1,11 @@
+debug: 'false'
+
+server:
+  servlet:
+    context-path: /personal-project/v1
+  port: '8080'
+
+analysis:
+  budget:
+    type-first: 36.238
+    type-second: 5000

@@ -1,0 +1,76 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+  <changeSet id="1" author="Sevinc Mammadova">
+    <createSequence sequenceName="profile_seq" incrementBy="1" startValue="1"/>
+    <createTable tableName="profiles">
+      <column name="id" type="BIGINT" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="name" type="varchar(255)">
+        <constraints nullable="true"/>
+      </column>
+      <column name="surname" type="varchar(255)">
+        <constraints nullable="true"/>
+      </column>
+      <column name="budget" type="DECIMAL">
+        <constraints nullable="true"/>
+      </column>
+      <column name="created_time" type="TimeStamp">
+        <constraints nullable="false"/>
+      </column>
+      <column name="updated_time" type="TimeStamp">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+    <createSequence sequenceName="analyses_seq" incrementBy="1" startValue="1"/>
+    <createTable tableName="analyses">
+      <column name="id" type="BIGINT" autoIncrement="true">
+        <constraints primaryKey="true" nullable="false"/>
+      </column>
+      <column name="type" type="varchar(255)">
+        <constraints nullable="true"/>
+      </column>
+      <column name="owner_id" type="BIGINT">
+        <constraints nullable="true"/>
+      </column>
+      <column name="hidden_info" type="varchar(255)">
+        <constraints nullable="true"/>
+      </column>
+      <column name="created_time" type="TimeStamp">
+        <constraints nullable="false"/>
+      </column>
+      <column name="updated_time" type="TimeStamp">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <createIndex clustered="true"
+      indexName="profile_id_address"
+      tableName="analyses"
+      unique="false">
+      <column descending="true" name="owner_id"/>
+    </createIndex>
+
+    <createTable tableName="analyses_viewers">
+      <column name="id" type="bigint" autoIncrement="true">
+        <constraints primaryKey="true"/>
+      </column>
+      <column name="analyses_id" type="bigint">
+        <constraints nullable="false" referencedTableName="analyses" referencedColumnNames="id"
+          foreignKeyName="analyses_id_fk1"/>
+      </column>
+      <column name="viewers_id" type="bigint">
+        <constraints nullable="false" referencedTableName="profiles" referencedColumnNames="id"
+          foreignKeyName="viewers_id_fk2"/>
+      </column>
+    </createTable>
+
+    <createIndex clustered="true"
+      indexName="viewers_id_address"
+      tableName="analyses_viewers"
+      unique="false">
+      <column descending="true" name="viewers_id"/>
+    </createIndex>
+  </changeSet>
+</databaseChangeLog>
