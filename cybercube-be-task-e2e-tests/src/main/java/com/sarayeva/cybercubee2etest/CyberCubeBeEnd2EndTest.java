@@ -8,4 +8,5 @@ public class CyberCubeBeEnd2EndTest {
     public static void main(String[] args) {
         SpringApplication.run(CyberCubeBeEnd2EndTest.class, args);
     }
+
 }
