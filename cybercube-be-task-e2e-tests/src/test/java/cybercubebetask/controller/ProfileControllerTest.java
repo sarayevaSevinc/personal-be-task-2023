@@ -13,22 +13,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
-@DirtiesContext
-@SpringBootTest(classes = CybercubeBeTaskApplication.class, webEnvironment = WebEnvironment.DEFINED_PORT)
-@TestPropertySource("classpath:test-application.yml")
+@SpringBootTest(classes = CybercubeBeTaskApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
 public class ProfileControllerTest {
+
+  @LocalServerPort
+  private int port;
 
   @Autowired
   private TestRestTemplate restTemplate;
-  private final String PROFILE_PATH = "http://localhost:8080/personal-project/v1/profile-management/profiles";
+  private final String PROFILE_PATH = "http://localhost:%d/personal-project/v1/profile-management/profiles";
 
 
   @Test
@@ -40,7 +40,7 @@ public class ProfileControllerTest {
         .budget(BigDecimal.valueOf(1000))
         .build();
     ResponseEntity<ProfileResponseDto> responseEntity = this.restTemplate
-        .postForEntity(URI.create(PROFILE_PATH),
+        .postForEntity(URI.create(String.format(PROFILE_PATH, port)),
             profileRequestDto, ProfileResponseDto.class);
     assertEquals(201, responseEntity.getStatusCodeValue());
     assertNotNull(responseEntity.getBody());
@@ -55,7 +55,7 @@ public class ProfileControllerTest {
     HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.add("x-profile-id", "2");
     ResponseEntity<ProfileResponseDto> responseEntity = this.restTemplate
-        .exchange(URI.create(PROFILE_PATH),
+        .exchange(URI.create(String.format(PROFILE_PATH, port)),
             HttpMethod.GET, new HttpEntity<>(httpHeaders), ProfileResponseDto.class);
     assertEquals(200, responseEntity.getStatusCodeValue());
     assertNotNull(responseEntity.getBody());
@@ -70,7 +70,7 @@ public class ProfileControllerTest {
     HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.add("x-profile-id", "5");
     ResponseEntity<ProfileResponseDto> responseEntity = this.restTemplate
-        .exchange(URI.create(PROFILE_PATH),
+        .exchange(URI.create(String.format(PROFILE_PATH, port)),
             HttpMethod.GET, new HttpEntity<>(httpHeaders), ProfileResponseDto.class);
     assertEquals(404, responseEntity.getStatusCodeValue());
     assertNotNull(responseEntity.getBody());
@@ -89,7 +89,8 @@ public class ProfileControllerTest {
     HttpEntity<ProfileRequestDto> requestEntity =
         new HttpEntity<>(profileRequestDto, httpHeaders);
     ResponseEntity<ProfileResponseDto> responseEntity = this.restTemplate
-        .exchange(URI.create(PROFILE_PATH), HttpMethod.PUT, requestEntity, ProfileResponseDto.class);
+        .exchange(URI.create(String.format(PROFILE_PATH, port)), HttpMethod.PUT, requestEntity,
+            ProfileResponseDto.class);
     assertEquals(201, responseEntity.getStatusCodeValue());
     assertNotNull(responseEntity.getBody());
     assertEquals(responseEntity.getBody().getName(), profileRequestDto.getName());

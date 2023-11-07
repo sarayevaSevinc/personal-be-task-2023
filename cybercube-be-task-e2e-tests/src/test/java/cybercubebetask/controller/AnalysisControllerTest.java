@@ -15,24 +15,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
-@DirtiesContext
-@SpringBootTest(classes = CybercubeBeTaskApplication.class, webEnvironment = WebEnvironment.DEFINED_PORT)
-@TestPropertySource("classpath:test-application.yml")
+@SpringBootTest(classes = CybercubeBeTaskApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
 public class AnalysisControllerTest {
+
+  @LocalServerPort
+  private int port;
 
   @Autowired
   private TestRestTemplate restTemplate;
 
-  private final String ANALYSIS_PATH = "http://localhost:8080/personal-project/v1/analysis-management/analyses";
+  private final String ANALYSIS_PATH = "http://localhost:%d/personal-project/v1/analysis-management/analyses";
 
 
   @Test
@@ -45,7 +47,8 @@ public class AnalysisControllerTest {
     HttpEntity<AnalysisRequestDto> requestEntity = new HttpEntity<>(analysisRequestDto,
         httpHeaders);
     ResponseEntity<AnalysisResponseDto> responseEntity = this.restTemplate.exchange(
-        URI.create(ANALYSIS_PATH), HttpMethod.POST, requestEntity, AnalysisResponseDto.class);
+        URI.create(String.format(ANALYSIS_PATH, port)), HttpMethod.POST, requestEntity,
+        AnalysisResponseDto.class);
     assertEquals(201, responseEntity.getStatusCodeValue());
     assertNotNull(responseEntity.getBody());
     assertEquals(3, responseEntity.getBody().getOwner());
@@ -63,7 +66,8 @@ public class AnalysisControllerTest {
     HttpEntity<AnalysisRequestDto> requestEntity = new HttpEntity<>(analysisRequestDto,
         httpHeaders);
     ResponseEntity<AnalysisResponseDto> responseEntity = this.restTemplate.exchange(
-        URI.create(ANALYSIS_PATH), HttpMethod.POST, requestEntity, AnalysisResponseDto.class);
+        URI.create(String.format(ANALYSIS_PATH, port)), HttpMethod.POST, requestEntity,
+        AnalysisResponseDto.class);
     assertEquals(400, responseEntity.getStatusCode().value());
   }
 
@@ -77,7 +81,8 @@ public class AnalysisControllerTest {
     HttpEntity<AnalysisRequestDto> requestEntity = new HttpEntity<>(analysisRequestDto,
         httpHeaders);
     ResponseEntity<AnalysisResponseDto> responseEntity = this.restTemplate.exchange(
-        URI.create(ANALYSIS_PATH), HttpMethod.POST, requestEntity, AnalysisResponseDto.class);
+        URI.create(String.format(ANALYSIS_PATH, port)), HttpMethod.POST, requestEntity,
+        AnalysisResponseDto.class);
     assertEquals(400, responseEntity.getStatusCode().value());
   }
 
@@ -87,7 +92,7 @@ public class AnalysisControllerTest {
     HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.add("x-profile-id", "2");
     ResponseEntity<AnalysisResponseDto> responseEntity = this.restTemplate.exchange(
-        URI.create(String.format("%s/%d", ANALYSIS_PATH, 2)), HttpMethod.GET,
+        URI.create(String.format(ANALYSIS_PATH + "/2", port)), HttpMethod.GET,
         new HttpEntity<>(httpHeaders), AnalysisResponseDto.class);
     assertEquals(200, responseEntity.getStatusCode().value());
     assertNotNull(responseEntity.getBody());
@@ -102,7 +107,7 @@ public class AnalysisControllerTest {
     HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.add("x-profile-id", "2");
     ResponseEntity<AnalysisResponseDto> responseEntity = this.restTemplate.exchange(
-        URI.create(String.format("%s/%d", ANALYSIS_PATH, 5)), HttpMethod.GET,
+        URI.create(String.format(ANALYSIS_PATH + "/5", port)), HttpMethod.GET,
         new HttpEntity<>(httpHeaders), AnalysisResponseDto.class);
     assertEquals(404, responseEntity.getStatusCode().value());
   }
@@ -113,7 +118,7 @@ public class AnalysisControllerTest {
     HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.add("x-profile-id", "2");
     ResponseEntity<AnalysisResponseDto> responseEntity = this.restTemplate.exchange(
-        URI.create(String.format("%s/%d", ANALYSIS_PATH, 3)), HttpMethod.GET,
+        URI.create(String.format(ANALYSIS_PATH + "/3", port)), HttpMethod.GET,
         new HttpEntity<>(httpHeaders), AnalysisResponseDto.class);
     assertEquals(200, responseEntity.getStatusCode().value());
     assertNotNull(responseEntity.getBody());
@@ -128,7 +133,8 @@ public class AnalysisControllerTest {
     HttpHeaders httpHeaders = new HttpHeaders();
     httpHeaders.add("x-profile-id", "2");
     ResponseEntity<List<AnalysisResponseDto>> responseEntity = this.restTemplate.exchange(
-        URI.create(ANALYSIS_PATH), HttpMethod.GET, new HttpEntity<>(httpHeaders),
+        URI.create(String.format(ANALYSIS_PATH, port)), HttpMethod.GET,
+        new HttpEntity<>(httpHeaders),
         new ParameterizedTypeReference<List<AnalysisResponseDto>>() {
         });
     assertEquals(200, responseEntity.getStatusCodeValue());
