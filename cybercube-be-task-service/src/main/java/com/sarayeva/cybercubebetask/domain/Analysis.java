@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Entity(name = "analyses")
 public class Analysis extends BaseEntity {
 
-    private static final long serialVersionUID = 7156526077883281623L;
+    private static final long serialVersionUID = 7156526077883232618L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
