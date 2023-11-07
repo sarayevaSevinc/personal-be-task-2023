@@ -14,7 +14,7 @@ The microservice provides the following:
 ## Running the application
 
 You can run it as a standalone jar in a few different ways:
-you can run the docker-compose.yml file located in cybercube-be-task-2023/docker
+you can run the dockerFile (located ` cybercube-be-task-service/Dockerfile`  ) and then docker-compose.yml file (located in ` cybercube-be-task-2023/docker` )
 `
 docker-compose up
 `

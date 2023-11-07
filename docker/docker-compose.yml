@@ -35,18 +35,12 @@ services:
       - db
 
 #  test:
-#    image: 'cybercube-be-task-service-test:latest'
-#    ports:
-#      - "8081:8080"
+#    build:
+#      context: ./cybercubebetask
+#    working_dir: /app
+#    command: ["./gradlew", "test"]
 #    networks:
 #      - cybercube-service-net
-#    environment:
-#      - spring.datasource.url=jdbc:postgresql://postgres:5432/personal-project
-#      - spring.datasource.username=personal_project
-#      - spring.datasource.password=personal_project
-#    build:
-#      context: .
-#    container_name: test
 #    depends_on:
 #      - app
 #      - db
