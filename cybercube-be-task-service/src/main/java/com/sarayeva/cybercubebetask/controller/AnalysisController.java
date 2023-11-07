@@ -51,7 +51,6 @@ public class AnalysisController {
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "2") int sizePerPage) {
     Pageable pageable = PageRequest.of(page, sizePerPage);
-
     return new ResponseEntity<>(analysisService.getAnalyses(profileId, pageable), HttpStatus.OK);
   }
 }

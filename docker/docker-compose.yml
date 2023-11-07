@@ -34,17 +34,18 @@ services:
     depends_on:
       - db
 
-  test:
-    image: 'cybercube-be-task-service-test:latest'
-    ports:
-      - "8081:8080"
-    networks:
-      - cybercube-service-net
-    build:
-      context: .
-    container_name: test
-    depends_on:
-      - app
+#  test:
+#    image: 'cybercube-be-task-service-test:latest'
+#    ports:
+#      - "8081:8080"
+#    networks:
+#      - cybercube-service-net
+#    build:
+#      context: .
+#    container_name: test
+#    depends_on:
+#      - app
+#      - db
 
 networks:
   cybercube-service-net:

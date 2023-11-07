@@ -8,4 +8,8 @@ jar {
                 'Main-Class': 'com.sarayeva.cybercubebetask.CybercubeBeTaskApplication'
         )
     }
+
+    test {
+        useJUnitPlatform()
+    }
 }

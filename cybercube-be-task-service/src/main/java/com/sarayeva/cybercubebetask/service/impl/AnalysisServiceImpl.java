@@ -35,8 +35,8 @@ public class AnalysisServiceImpl implements AnalysisService {
   @Override
   @Transactional
   public AnalysisResponseDto saveAnalysis(AnalysisRequestDto analysisDto, Long profileId) {
-    checkViewers(analysisDto.getViewers(), profileId);
     log.info("save new analysis request:{}", analysisDto);
+    checkViewers(analysisDto.getViewers(), profileId);
     Profile profile = profileService.findProfile(profileId);
     BigDecimal budgetForAnalysis = getBudgetForAnalysis(analysisDto.getType());
     if (!checkBudgetForAnalysis(profile, budgetForAnalysis)) {
@@ -46,6 +46,7 @@ public class AnalysisServiceImpl implements AnalysisService {
     profile.setBudget(profile.getBudget().subtract(budgetForAnalysis));
     profileService.updateProfile(profile);
     Analysis save = analysisRepository.save(analysis);
+    log.info("test={}",save );
     log.info("saved new analysis with id={}, and userId={}", save.getId(), profileId);
     return analysisMapper.toAnalysisDto(analysis);
   }
@@ -77,13 +78,13 @@ public class AnalysisServiceImpl implements AnalysisService {
   }
 
   private void checkViewers(List<Long> viewerIdList, Long profileId) {
-    if (viewerIdList.contains(profileId)) {
+    if (viewerIdList!= null && viewerIdList.contains(profileId)) {
       throw new BadOperationException();
     }
   }
 
   private void checkViewerList(List<Profile> viewerList, List<Long> viewerIdList) {
-    if (viewerList.size() != viewerIdList.size()) {
+    if (viewerIdList!= null && viewerList.size() != viewerIdList.size()) {
       throw new ViewerNotFoundException();
     }
   }

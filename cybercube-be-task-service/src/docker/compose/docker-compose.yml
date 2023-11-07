@@ -1,0 +1,10 @@
+services:
+  personal-project-service-db:
+    image: postgres:14-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: personal-project
+      POSTGRES_ROOT_PASSWORD: personal_project
+      POSTGRES_USER: personal_project
+      POSTGRES_PASSWORD: personal_project

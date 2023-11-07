@@ -60,8 +60,7 @@ class AnalysisServiceTest {
     //setup
     Analysis analysis = createAnalysis();
     AnalysisResponseDto analysisResponseDto = createAnalysisResponseDto();
-    when(analysisRepositoryMock.findAnalysisByIdAndOwnerOrViewersContaining(any(), any(),
-        any())).thenReturn(
+    when(analysisRepositoryMock.findAnalysisByIdAndProfile(any(), any())).thenReturn(
         Optional.of(analysis));
     when(analysisMapperMock.toAnalysisDto(any(), any())).thenReturn(analysisResponseDto);
     // run
@@ -74,7 +73,7 @@ class AnalysisServiceTest {
   @Test
   void getAnalysis_error_throwAnalysisNotFoundException() {
     //setup
-    when(analysisRepositoryMock.findAnalysisByIdAndOwnerOrViewersContaining(any(), any(),
+    when(analysisRepositoryMock.findAnalysisByIdAndProfile(any(),
         any())).thenThrow(new AnalysisNotFoundException());
     // verify
     Assertions.assertThrows(AnalysisNotFoundException.class,

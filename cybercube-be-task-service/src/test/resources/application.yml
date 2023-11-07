@@ -1,4 +1,17 @@
-debug: 'false'
+spring:
+  application:
+    name: personal-project-service
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: personal_project
+    url: jdbc:postgresql://localhost:5432/personal-project
+    password: personal_project
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+  jpa:
+    show-sql: true
 
 server:
   servlet:
