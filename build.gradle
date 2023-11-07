@@ -1,0 +1,83 @@
+buildscript {
+    ext.mavenRepositories = { mavenCentral() }
+
+    repositories mavenRepositories
+}
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.1.5'
+    id 'io.spring.dependency-management' version '1.1.3'
+}
+
+group = 'cybercube-be-task'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '17'
+}
+
+allprojects {
+    apply plugin: "org.springframework.boot"
+    apply plugin: "io.spring.dependency-management"
+    apply plugin: "java"
+    sourceCompatibility = 17
+    repositories mavenRepositories
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:2021.0.1"
+        }
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+
+ext {
+    mapstructVersion = "1.5.5.Final"
+    springBootValidationVersion = "3.1.5"
+    mockitoVersion = "5.7.0"
+}
+subprojects {
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+    dependencies {
+        testImplementation 'org.projectlombok:lombok:1.18.28'
+        annotationProcessor 'org.projectlombok:lombok'
+        implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+        annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        implementation "org.springframework.boot:spring-boot-starter-validation:${springBootValidationVersion}"
+        implementation 'org.liquibase:liquibase-core'
+        compileOnly 'org.projectlombok:lombok'
+        runtimeOnly 'org.postgresql:postgresql'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    }
+
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs = [
+            '-Amapstruct.defaultComponentModel=spring'
+    ]
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+jar {
+    enabled = false
+}
+
+bootJar {
+    enabled = false
+}

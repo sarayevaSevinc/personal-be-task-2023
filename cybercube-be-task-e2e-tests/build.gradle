@@ -1,0 +1,9 @@
+group = 'cybercube-be-task'
+
+dependencies {
+    implementation project(":cybercube-be-task-service")
+}
+
+test {
+    useJUnitPlatform()
+}

@@ -1,0 +1,50 @@
+version: '2'
+
+services:
+  db:
+    image: 'postgres:13.1-alpine'
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    expose:
+      - 5432
+    networks:
+      - cybercube-service-net
+    environment:
+      - POSTGRES_DB=personal-project
+      - POSTGRES_ROOT_PASSWORD=personal_project
+      - POSTGRES_USER=personal_project
+      - POSTGRES_PASSWORD=personal_project
+
+  app:
+    image: 'cybercube-be-task-service:latest'
+    ports:
+      - "8080:8080"
+    links:
+      - db
+    environment:
+      - spring.datasource.url=jdbc:postgresql://postgres:5432/personal-project
+      - spring.datasource.username=personal_project
+      - spring.datasource.password=personal_project
+    networks:
+      - cybercube-service-net
+    build:
+      context: .
+    container_name: app
+    depends_on:
+      - db
+
+  test:
+    image: 'cybercube-be-task-service-test:latest'
+    ports:
+      - "8081:8080"
+    networks:
+      - cybercube-service-net
+    build:
+      context: .
+    container_name: test
+    depends_on:
+      - app
+
+networks:
+  cybercube-service-net:

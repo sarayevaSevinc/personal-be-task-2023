@@ -1,4 +1,3 @@
 rootProject.name = 'cybercube-be-task'
-include 'cybercube-be-task-service'
-include 'cybercube-be-task-e2e-tests'
-
+include ':cybercube-be-task-service'
+include ':cybercube-be-task-e2e-tests'

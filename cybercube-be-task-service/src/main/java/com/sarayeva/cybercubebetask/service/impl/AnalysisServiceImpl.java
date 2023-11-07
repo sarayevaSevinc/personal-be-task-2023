@@ -7,6 +7,7 @@ import com.sarayeva.cybercubebetask.domain.Profile;
 import com.sarayeva.cybercubebetask.dto.AnalysisRequestDto;
 import com.sarayeva.cybercubebetask.dto.AnalysisResponseDto;
 import com.sarayeva.cybercubebetask.exception.AnalysisNotFoundException;
+import com.sarayeva.cybercubebetask.exception.BadOperationException;
 import com.sarayeva.cybercubebetask.exception.InsufficientBudgetException;
 import com.sarayeva.cybercubebetask.exception.ViewerNotFoundException;
 import com.sarayeva.cybercubebetask.mapper.AnalysisMapper;
@@ -34,6 +35,7 @@ public class AnalysisServiceImpl implements AnalysisService {
   @Override
   @Transactional
   public AnalysisResponseDto saveAnalysis(AnalysisRequestDto analysisDto, Long profileId) {
+    checkViewers(analysisDto.getViewers(), profileId);
     log.info("save new analysis request:{}", analysisDto);
     Profile profile = profileService.findProfile(profileId);
     BigDecimal budgetForAnalysis = getBudgetForAnalysis(analysisDto.getType());
@@ -52,8 +54,8 @@ public class AnalysisServiceImpl implements AnalysisService {
   public AnalysisResponseDto getAnalysis(Long profileId, Long analysisId) {
     log.info("get analysis with profileId={}, analysisId={}", profileId, analysisId);
     Profile profile = profileService.findProfile(profileId);
-    Analysis analysis = analysisRepository.findAnalysisByIdAndOwnerOrViewersContaining(analysisId,
-            profile, profile)
+    Analysis analysis = analysisRepository.findAnalysisByIdAndProfile(analysisId,
+            profileId)
         .orElseThrow(AnalysisNotFoundException::new);
     return analysisMapper.toAnalysisDto(analysis, profile);
   }
@@ -72,6 +74,12 @@ public class AnalysisServiceImpl implements AnalysisService {
     List<Profile> viewersList = profileService.findAllProfilesByIds(analysisDto.getViewers());
     checkViewerList(viewersList, analysisDto.getViewers());
     return analysisMapper.toAnalysis(analysisDto, viewersList, profile);
+  }
+
+  private void checkViewers(List<Long> viewerIdList, Long profileId) {
+    if (viewerIdList.contains(profileId)) {
+      throw new BadOperationException();
+    }
   }
 
   private void checkViewerList(List<Profile> viewerList, List<Long> viewerIdList) {
