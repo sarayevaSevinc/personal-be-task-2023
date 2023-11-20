@@ -1,0 +1,18 @@
+group = 'personal-be-task'
+ext {
+    set('testcontainersVersion', "1.19.1")
+}
+dependencies {
+    implementation project(":personal-be-task-service")
+    testImplementation 'org.testcontainers:testcontainers:1.19.1'
+    implementation 'org.springframework.boot:spring-boot-testcontainers:3.1.5'
+    testImplementation 'org.testcontainers:junit-jupiter'
+}
+dependencyManagement {
+    imports {
+        mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
+    }
+}
+test {
+    useJUnitPlatform()
+}
